@@ -11,9 +11,8 @@ public class ChatClient {
     private PrintStream serverOut = null;
     private MainGUI frame;
     private StudentGUI sFrame;
-    private AdminGUI aFrame;
     private Button[] first;
-    private Button admin, deposit, withdraw;
+    private Button deposit, withdraw, print, update;
     public static void main(String[] args) {
         ChatClient c = new ChatClient();
         c.doConnect();
@@ -22,16 +21,17 @@ public class ChatClient {
         frame = new MainGUI();
         first = frame.getButton();
         sFrame = frame.getStudent();
-        aFrame = frame.getAdmin();
-        admin = aFrame.getButton();
         deposit = sFrame.getDeposit();
         withdraw = sFrame.getWithdraw();
+        print = sFrame.getPrint();
+        update = sFrame.getUpdate();
         first[0].addActionListener(new FirstGUI());
         first[1].addActionListener(new FirstGUI());
         first[2].addActionListener(new FirstGUI());
-        admin.addActionListener(new FirstGUI());
         deposit.addActionListener(new FirstGUI());
-        withdraw.addActionListener(new FirstGUI());        
+        withdraw.addActionListener(new FirstGUI());
+        print.addActionListener(new FirstGUI());
+        update.addActionListener(new FirstGUI());
     }
     private void doConnect() {
         try {
@@ -50,49 +50,59 @@ public class ChatClient {
             if(e.getSource()==first[0]){
                 student();   
             } else if(e.getSource()==first[1]){
-                serverOut.println("A");
-                String password = JOptionPane.showInputDialog("Enter your password:");
-                serverOut.println(password);
+                register();
             } else if(e.getSource()==first[2]){
                 serverOut.println("Client is leaving!");
                 System.exit(0);
-            } else if(e.getSource()==admin){
-                admin();
             } else if(e.getSource()==deposit){
-                depsoit();
+                deposit();
             } else if(e.getSource()==withdraw){
                 withdraw();
+            } else if(e.getSource()==print){
+                print();
+            } else if(e.getSource()==update){
+                update();
             }
         }
     }
     public void student(){
         serverOut.println("S");
-        String input = JOptionPane.showInputDialog("Enter your username:");
+        String input = JOptionPane.showInputDialog("Enter your Username");
         serverOut.println(input);
-        input = JOptionPane.showInputDialog("Enter your pin:");
+        input = JOptionPane.showInputDialog("Enter your PIN");
         serverOut.println(input);
     }
-    public void depsoit(){
+    public void register(){
+        serverOut.println("R");
+        String input = JOptionPane.showInputDialog("Enter your Username");
+        serverOut.println(input);
+        input = JOptionPane.showInputDialog("Enter your Pin");
+        serverOut.println(input);
+        input = JOptionPane.showInputDialog("Enter your Gender");
+        serverOut.println(input);
+        input = JOptionPane.showInputDialog("Enter your Opening Balance");
+        serverOut.println(input);
+    }
+    public void deposit(){
         serverOut.println("D");
-        String input = JOptionPane.showInputDialog("Enter deposit amount:");
+        String input = JOptionPane.showInputDialog("Enter Deposit Amount");
         serverOut.println(input);
     }
     public void withdraw(){
         serverOut.println("W");
-        String input = JOptionPane.showInputDialog("Enter withdraw amount:");
+        String input = JOptionPane.showInputDialog("Enter Withdrawal Amount");
         serverOut.println(input);
     }
-    public void admin(){
-        serverOut.println("C");
-        String a = JOptionPane.showInputDialog("Enter student name:");
-        serverOut.println(a);
-        String b = JOptionPane.showInputDialog("Enter student gender:");
-        serverOut.println(b);
-        String c = JOptionPane.showInputDialog("Enter student pin:");
-        serverOut.println(c);
-        String d = JOptionPane.showInputDialog("Enter student balance:");
-        serverOut.println(d);        
-    }    
+    public void print(){
+        serverOut.println("P");
+    }
+    public void update(){
+        serverOut.println("U");
+        String input = JOptionPane.showInputDialog("Enter NEW Username");
+        serverOut.println(input);
+        input = JOptionPane.showInputDialog("Enter NEW Pin");
+        serverOut.println(input);
+    }
     private class RemoteReader {
         private boolean keepListening = true;
         public void start() {
@@ -106,12 +116,11 @@ public class ChatClient {
                             frame.setVisible(false);
                         } else if(nextLine.equals("Login Failed!")){
                             JOptionPane.showMessageDialog(null,"Login Failed!");
-                        } else if(nextLine.equals("Welcome Admin!")){
-                            aFrame.setVisible(true);
-                            frame.setVisible(false);
                         } else if(nextLine.equals("Wrong Password!")){
                             JOptionPane.showMessageDialog(null,"Wrong Password!");
                         } else if(nextLine.equals("Transaction Successful!")){
+                            JOptionPane.showMessageDialog(null,serverIn.readLine());
+                        } else if(nextLine.equals("Check Balance!")){
                             JOptionPane.showMessageDialog(null,serverIn.readLine());
                         }
                     }
