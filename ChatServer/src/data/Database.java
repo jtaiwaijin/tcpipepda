@@ -5,7 +5,7 @@ import model.*;
 public class Database {
     private static Database source = new Database();
     private Database(){}
-    private List<Student> data = new ArrayList<Student>();
+    private List<Student> data;
     public static Database getDatabase(){
         return source;
     }
@@ -23,8 +23,6 @@ public class Database {
             objectInputFile.close();
         } catch(Exception e){
             System.out.println("Input error!");
-            /*Student backup = new Student ("James", 'M', 12345, 100.00);
-            data.add(backup);*/
         }      
         return data;
     }

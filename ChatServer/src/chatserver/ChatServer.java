@@ -80,22 +80,30 @@ public class ChatServer {
                         } else{
                             sendMessage("Login Failed!\n");
                         }
-                    } else if(input.equals("R")){
+                    } else if(input.equals("A")){
+                        String password = in.readLine();
+                        System.out.println(password);
+                        sendMessage("Received: "+password+"!\n");
+                        if(Admin.Login(Integer.parseInt(password))){
+                            sendMessage("Welcome Admin!\n");
+                        } else{
+                            sendMessage("Wrong Password!\n");
+                        }
+                    } else if(input.equals("C")){
                         String a = in.readLine();
                         System.out.println(a);
                         sendMessage("Received: "+a+"!\n");
-                        int c = Integer.parseInt(in.readLine());
-                        System.out.println(c);
-                        sendMessage("Received: "+c+"!\n");
                         char b = in.readLine().charAt(0);
                         System.out.println(b);
                         sendMessage("Received: "+b+"!\n");
+                        int c = Integer.parseInt(in.readLine());
+                        System.out.println(c);
+                        sendMessage("Received: "+c+"!\n");
                         double d = Double.parseDouble(in.readLine());
                         System.out.println(d);
                         sendMessage("Received: "+d+"!\n");
-                        sendMessage("Register user "+a+ "("+ b+ ") with password "+c+" and opening balance of "+d+" !\n");
-                        Student s = new Student(a, b, c, d);
-                        data.add(s);
+                        Student newStudent = Admin.createStudent(a,b,c,d);
+                        data.add(newStudent);
                     } else if(input.equals("D")){
                         double d = Double.parseDouble(in.readLine());
                         System.out.println(d);
@@ -110,23 +118,9 @@ public class ChatServer {
                         s.withdraw(d);
                         sendMessage("Transaction Successful!\n");
                         sendMessage("New balance is RM"+s.getBalance()+"!\n");
-                    } else if(input.equals("P")){
-                        sendMessage("Check Balance!\n");
-                        sendMessage(s.printing() +"\n");
-                    } else if(input.equals("U")){
-                        String a = in.readLine();
-                        System.out.println(a);
-                        sendMessage("Received: "+a+"!\n");
-                        int b = Integer.parseInt(in.readLine());
-                        System.out.println(b);
-                        sendMessage("Received: "+b+"!\n");
-                        s.update(a, b);
-                        sendMessage("Transaction Successful!\n");
-                        sendMessage("New Username is ("+s.getName()+") with Password ("+s.getPin()+")!\n");
                     }
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
+            } catch(Exception e) { 
             } finally {
                 try {
                     if(in != null) in.close();
